@@ -8,31 +8,27 @@
   (* 3 x)
   )
 
-(defn parallel-squares [f a b]
-  (let [intervals (range a b 0.5)]
-    (->> intervals
-      (pmap #(trapezia-square f % (+ % 0.5)))
-      (reduce +)
-      )
-    )
+(defn rec-integral-no-mem [mem-func f a b]
+  (if (>= 0 b)
+    0
+    (+ (mem-func mem-func f a (- b 0.5)) (trapezia-square f (- b 0.5) b)))
   )
 
 
-(defn integral-parallel [x]
-  (parallel-squares input-f 0 x)
+(def rec-integral-mem (memoize rec-integral-no-mem))
+
+(defn integral-mem [x]
+  (rec-integral-mem rec-integral-mem input-f 0 x)
   )
 
 
 (defn -main [& args]
-  (time (integral-parallel 100))
-  ;(println (integral-parallel 100))
-  (time (integral-parallel 99))
-  ;(println (integral-parallel 99))
-  (time (integral-parallel 101))
-  ;(println (integral-parallel 101))
-  (time (integral-parallel 100))
+  (time (integral-mem 100))
+  ;(println (integral-mem 100))
+  (time (integral-mem 99))
+  ;(println (integral-mem 99))
+  (time (integral-mem 101))
+  ;(println (integral-mem 101))
   )
 
 (-main)
-
-
