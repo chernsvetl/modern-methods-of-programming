@@ -9,7 +9,7 @@
   )
 
 (defn rec-integral-no-mem [f a b]
-  (if (>= a b)
+  (if (>= 0 b)
     0
     (+ (rec-integral-no-mem f a (- b 1)) (trapezia-square f (- b 1) b)))
   )
@@ -17,5 +17,30 @@
 (defn integral-no-mem [x]
   (rec-integral-no-mem input-f 0 x))
 
-(println(integral-no-mem 100))
+(def integral-mem (memoize integral-no-mem))
+
+
+(defn -main [& args]
+  (time (integral-no-mem 100))
+  ;(println (integral-no-mem 100))
+  (time (integral-no-mem 99))
+  ;(println (integral-no-mem 99))
+  (time (integral-no-mem 101))
+  ;(println (integral-no-mem 101))
+  (time (integral-no-mem 100))
+  ;(println (integral-no-mem 100))
+  (println "-------------------------------")
+  (time (integral-mem 100))
+  ;(println (integral-no-mem 100))
+  (time (integral-mem 99))
+  ;(println (integral-no-mem 99))
+  (time (integral-mem 101))
+  ;(println (integral-no-mem 101))
+  (time (integral-mem 100))
+  ;(println (integral-no-mem 100))
+  )
+
+(-main)
+
+
 
