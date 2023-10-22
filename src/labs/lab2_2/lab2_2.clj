@@ -8,32 +8,30 @@
   (* 3 x)
   )
 
-; 0 0.5 1 1.5 2 ... 4.5 ... etc.
-; 0 .. 4.5
-; map (... f (i in interval) (i in interval + step)
-; sum squares
-(defn rec-integral [f a b]
-  (let [intervals (iterate #(+ % 0.5) a)]
-    (->> intervals
-         (take-while #(< % b))
-         (map #(trapezia-square f % (+ % 0.5)))
-         (reduce +)
-         )
-    )
+(def seq (map second
+           (iterate
+             (fn [[k v]] [(+ k 0.5) (+ v (trapezia-square input-f k (+ k 0.5)))])
+                              [0 0]
+                       ))
+  )
+
+(defn rec-integral [f n]
+  (nth seq n)
   )
 
 (defn integral [x]
-    (rec-integral  input-f 0 x))
+  (rec-integral input-f (quot x 0.5)))
+
 
 (defn -main [& args]
   (time (integral 100))
-  ;(println (integral 5))
+  ;(println (integral 100))
   (time (integral 99))
   ;(println (integral 99))
   (time (integral 101))
-  (time (integral 100))
   ;(println (integral 101))
-  ;(println "-------------------------------")
+  (time (integral 100))
+  ;(println (integral 100))
   )
 
 (-main)

@@ -1,27 +1,3 @@
-(defn rec-integral-no-mem [f a b]
-(let [intervals (iterate #(+ % 0.5) a)]
-(->> intervals
-(take-while #(< % b))
-(map #(trapezia-square f % (+ % 0.5)))
-(reduce +)
-)
-)
-)
-
-
-(defn rec-integral-no-mem [f a b]
-(let [intervals (iterate #(+ % 0.5) a)]
-(reduce +
-(map #(trapezia-square f % (+ % 0.5))
-(take-while #(< % b) intervals)
-)
-)
-)
-)
-
-
-
-
 (defn culc-> []
   (def c 5)
   (-> c
@@ -33,5 +9,4 @@
   (->> c
        (+ 3) (/ 2) (- 1))
   )
-;(println (culc->))
-;(println (culc->>))
+
