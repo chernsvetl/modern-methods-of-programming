@@ -8,27 +8,32 @@
   (* 3 x)
   )
 
-(defn rec-integral-no-mem [mem-func f a b]
-  (if (>= 0 b)
-    0
-    (+ (mem-func mem-func f a (- b 0.5)) (trapezia-square f (- b 0.5) b)))
+; 0 0.5 1 1.5 2 ... 4.5 ... etc.
+; 0 .. 4.5
+; map (... f (i in interval) (i in interval + step)
+; sum squares
+(defn rec-integral [f a b]
+  (let [intervals (iterate #(+ % 0.5) a)]
+    (->> intervals
+         (take-while #(< % b))
+         (map #(trapezia-square f % (+ % 0.5)))
+         (reduce +)
+         )
+    )
   )
 
-
-(def rec-integral-mem (memoize rec-integral-no-mem))
-
-(defn integral-mem [x]
-  (rec-integral-mem rec-integral-mem input-f 0 x)
-  )
-
+(defn integral [x]
+    (rec-integral  input-f 0 x))
 
 (defn -main [& args]
-  (time (integral-mem 100))
-  ;(println (integral-mem 100))
-  (time (integral-mem 99))
-  ;(println (integral-mem 99))
-  (time (integral-mem 101))
-  ;(println (integral-mem 101))
+  (time (integral 100))
+  ;(println (integral 5))
+  (time (integral 99))
+  ;(println (integral 99))
+  (time (integral 101))
+  (time (integral 100))
+  ;(println (integral 101))
+  ;(println "-------------------------------")
   )
 
 (-main)
