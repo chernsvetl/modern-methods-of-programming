@@ -20,7 +20,7 @@
   )
 
 (defn integral [x]
-  (rec-integral input-f (quot x 0.5)))
+  (rec-integral input-f (/ x 0.5)))
 
 
 (defn -main [& args]
