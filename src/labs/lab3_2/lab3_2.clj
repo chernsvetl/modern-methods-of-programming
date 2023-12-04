@@ -2,26 +2,25 @@
 
 (defn heavy-func [f]
   (fn [coll]
-    (Thread/sleep 100)
+    (Thread/sleep 300)
     (f coll)
     )
   )
 
-;Он должен вывести список из списков: ((1,...,100), (101,...,200),...)
-(defn my-partition [coll]
-  (map first (iterate
-               (fn [[cur rem]]
-                 [(take 5 rem) (drop 5 rem)])
-               [(take 5 coll) (drop 5 coll)]
-               )
-       )
-  )
-;(println (take 5 (my-partition (iterate inc 1)))) - 5 это сколько списков взять
+(defn my-partition
+  [lazy-coll batch-size]
+  (take-while
+    (partial seq)
+    (->> (iterate
+           (fn [[batch tail]]
+             [(take batch-size tail) (drop batch-size tail)])
+           [(take batch-size lazy-coll) (drop batch-size lazy-coll)])
+         (map #(first %)))))
 
 (defn lazy-parallel-filter [f coll]
   (let [heavy-f (heavy-func f)]
     (->>
-      (take 3 (my-partition coll)) ; 3 это сколько списков взять
+      (take 50 (my-partition coll 50))
       (map #(future (doall(filter heavy-f %))))
       (doall)
       (mapcat deref)
@@ -29,20 +28,20 @@
     )
   )
 
-
 (defn main []
   (time
     (->> (lazy-parallel-filter (heavy-func even?)(iterate inc 1))
          (doall)
          )
     )
-  (println(filter (heavy-func even?) (range 15)))
+  (println(filter (heavy-func even?) (range 150)))
   (time
-    (->> (filter (heavy-func even?)(take 15 (iterate inc 1)))
+    (->> (filter (heavy-func even?)(take 150 (iterate inc 1)))
          (doall)
          )
     )
   )
 
 (println (main))
+
 
