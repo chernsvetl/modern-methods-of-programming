@@ -1,13 +1,13 @@
 (ns labs.lab3-1.lab3-1)
 
+(defn is-even
+  [n]
+  (= 0 (mod n 2)))
 
-(defn heavy-func [f]
-  (fn [coll]
-    ;(Thread/sleep 100)
-    (Thread/sleep 1)
-    (f coll)
-    )
-  )
+(defn heavy-func
+  [n]
+  (Thread/sleep 1)
+  (is-even n))
 
 (defn my-partition [coll cnt-threads]
   (loop [cur-coll coll, part-coll (int (/ (count coll) cnt-threads)), res []]
@@ -32,26 +32,25 @@
 
 
 (defn main []
-  (def enter-coll [1 2 3 4 5 2.0 0.1 6.3])
   (time
-    (->> (filter (heavy-func int?) enter-coll)
+    (->> (filter (heavy-func even?) (range 10))
           (doall)
       )
     )
-  (println (filter (heavy-func int?) enter-coll))
+  (println (filter (heavy-func even?) (range 10)))
 (println "-------------------------")
   (time
-    (->> (parallel-filter (heavy-func int?) enter-coll 1)
+    (->> (parallel-filter (heavy-func even?) (range 10) 1)
          (doall)
          )
     )
   (time
-    (->> (parallel-filter (heavy-func int?) enter-coll 3)
+    (->> (parallel-filter (heavy-func even?) (range 10) 3)
          (doall)
          )
     )
   (time
-    (->> (parallel-filter (heavy-func int?) enter-coll 5)
+    (->> (parallel-filter (heavy-func even?) (range 10) 5)
          (doall)
          )
     )
