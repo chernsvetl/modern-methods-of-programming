@@ -6,7 +6,7 @@
 
 (defn heavy-func [f]
   (fn [coll]
-    (Thread/sleep 1)
+    (Thread/sleep 100)
     (f coll)
     )
   )
@@ -46,6 +46,18 @@
       (parallel-filter (heavy-func main-func) (range 10) 1)
          (doall)
          )
+    )
+  (time
+    (->>
+      (parallel-filter (heavy-func main-func) (range 10) 2)
+      (doall)
+      )
+    )
+  (time
+    (->>
+      (parallel-filter (heavy-func main-func) (range 10) 4)
+      (doall)
+      )
     )
   )
 

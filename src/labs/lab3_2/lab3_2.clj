@@ -12,25 +12,27 @@
   )
 
 (defn my-partition
-  [batch-size lazy-coll]
+  [block-size lazy-coll]
   (take-while
     (partial seq)
     (->>
            (iterate
-           (fn [[batch tail]]
-             [(take batch-size tail) (drop batch-size tail)])
-           [(take batch-size lazy-coll) (drop batch-size lazy-coll)])
+           (fn [[block tail]]
+             [(take block-size tail) (drop block-size tail)])
+           [(take block-size lazy-coll) (drop block-size lazy-coll)])
          (map #(first %)))))
 
 
 (defn lazy-parallel-filter
-  [pred coll batch-size num-threads]
+  [pred coll block-size num-threads]
   (->>
-       (my-partition batch-size coll) ;1
-       (map #(future (doall (filter pred %)))) ;2
+       (my-partition block-size coll) ;1
+       (map #(future (doall (filter pred %)))) ;2 каждой подпоследовательности сопоставится future
+       ; благодаря future внутренние потоки выполняются параллельно
        (my-partition num-threads)      ;3
-       (map #(future (mapcat deref (doall %))))  ;4
-       (mapcat deref)))  ;5
+       (map #(future (mapcat deref (doall %))))  ;4 запуск первого внешнего потока, после его заврешения запускатся второй внешний поток и так далее
+       ; внешний поток запускает внутренние потоки внутри подпоследовательности, которые будут выполняться параллельно и после делает их конкатенацию списков
+       (mapcat deref)))  ;5 соединение результатов внешних потоков
 
 
 (defn main []
