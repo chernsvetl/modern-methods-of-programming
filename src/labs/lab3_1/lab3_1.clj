@@ -34,31 +34,11 @@
   )
 
 
-(defn main []
-  (time
-    (->>
-      (filter (heavy-func main-func) (range 10))
-         (doall)
-         )
-    )
-  (time
-    (->>
-      (parallel-filter (heavy-func main-func) (range 10) 1)
-         (doall)
-         )
-    )
-  (time
-    (->>
-      (parallel-filter (heavy-func main-func) (range 10) 2)
-      (doall)
-      )
-    )
-  (time
-    (->>
-      (parallel-filter (heavy-func main-func) (range 10) 4)
-      (doall)
-      )
-    )
+(defn -main []
+  (time (doall (filter (heavy-func main-func) (range 10))))
+  (time (doall (parallel-filter (heavy-func main-func) (range 10) 1)))
+  (time (doall (parallel-filter (heavy-func main-func) (range 10) 2)))
+  (time (doall (parallel-filter (heavy-func main-func) (range 10) 4)))
   )
 
-(println (main))
+(println (-main))
