@@ -57,3 +57,15 @@
 
 (defn implication? [expr]
   (= :implication(first expr)))
+
+(defn xor [expr & rest]
+  (cons :xor (cons expr rest)))
+
+(defn xor? [expr]
+  (= :xor(first expr)))
+
+(defn pier-arrow [expr & rest]
+  (cons :pier-arrow (cons expr rest)))
+
+(defn pier-arrow? [expr]
+  (= :pier-arrow(first expr)))
