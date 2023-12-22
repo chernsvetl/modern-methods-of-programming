@@ -1,5 +1,5 @@
 (ns labs.lab4.replacement
-  (:require [labs.lab4.operations :refer :all])
+  (:require [labs.lab4.api :refer :all])
   )
 
 (defn diff [expr rules]
@@ -20,14 +20,14 @@
     [(fn [expr] (or (variable? expr) (const? expr)))
      (fn [expr] expr)]
 
-    [(fn [expr] (negation? expr))
-     (fn [expr] (negation (define-expr var val (second expr))))]
+    [(fn [expr] (no? expr))
+     (fn [expr] (no (define-expr var val (second expr))))]
 
-    [(fn [expr] (conjunction? expr))
-     (fn [expr] (apply conjunction (map #(define-expr var val %) (args expr))))]
+    [(fn [expr] (&&? expr))
+     (fn [expr] (apply && (map #(define-expr var val %) (args expr))))]
 
-    [(fn [expr] (disjunction? expr))
-     (fn [expr] (apply disjunction (map #(define-expr var val %) (args expr))))]
+    [(fn [expr] (||? expr))
+     (fn [expr] (apply || (map #(define-expr var val %) (args expr))))]
 
     )
   )
