@@ -9,7 +9,9 @@
 (declare apply-for-predicates-expr)
 
 (def apply-for-predicates-expr-rules
+  "список правил вывода"
   (list
+
     [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
      (fn [expr] (apply-for-predicates-expr (apply disjunction (map #(negation %) (args (second expr))))))]
 
@@ -17,16 +19,17 @@
      (fn [expr] (apply-for-predicates-expr (apply conjunction (map #(negation %) (args (second expr))))))]
 
     [(fn [expr] (negation? expr))
-     (fn [expr] (negation (apply-for-predicates-expr  (second expr))))]
+     (fn [expr] (negation (apply-for-predicates-expr (second expr))))]
 
-
+    "правило для вывода конъюнкции"
     [(fn [expr] (conjunction? expr))
      (fn [expr] (apply conjunction (map #(apply-for-predicates-expr %) (args expr))))]
 
-
+    "правило для вывода дизъюнкции"
     [(fn [expr] (disjunction? expr))
      (fn [expr] (apply disjunction (map #(apply-for-predicates-expr %) (args expr))))]
 
+    "правило для вывода импликации"
     [(fn [expr] (implication? expr))
      (fn [expr] (apply implication (map #(apply-for-predicates-expr %) (args expr))))]
 

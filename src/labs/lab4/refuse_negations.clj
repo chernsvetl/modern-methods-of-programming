@@ -6,11 +6,14 @@
 (declare refuse-expr-negation)
 
 (def refuse-expr-negation-rules
+  "список правил вывода"
   (list
 
+    "правило замены отрицания true -> false"
     [(fn [expr] (and (negation? expr) (const-true? (first (args expr)))))
      (fn [expr] const-false)]
 
+    "правило замены отрицания false -> true"
     [(fn [expr] (and (negation? expr) (const-false? (first (args expr)))))
      (fn [expr] const-true)]
 

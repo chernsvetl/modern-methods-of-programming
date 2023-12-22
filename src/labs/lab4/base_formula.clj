@@ -6,6 +6,7 @@
 (declare base-operations-expr)
 
 (def base-operations-rules
+  "список правил вывода"
   (list
 
     [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
@@ -23,10 +24,6 @@
                     (conjunction (negation(first (args expr))) (second (args expr))))))
      ]
     ; A* !B + !A*B
-    ; (disjunction
-    ; (conjunction (variable a) (negation (variable b)))
-    ; (negation(variable a)) (variable b)
-
     [(fn [expr] (pier-arrow? expr))
      (fn [expr] (negation (disjunction (first (args expr)) (second (args expr)))))]
 

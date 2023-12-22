@@ -8,6 +8,7 @@
 
 (declare constant-refuse-expr)
 (def constant-refuse-rules
+  "список правил вывода"
   (list
 
     [(fn [expr] (and (disjunction? expr) (some const? (args expr))))

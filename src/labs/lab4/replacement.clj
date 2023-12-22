@@ -11,7 +11,9 @@
 (declare define-expr)
 
 (defn define-rules [var val]
+  "функция для замены переменной на значение"
   (list
+    
     [(fn [expr] (and (variable? expr) (same-variables? var expr)))
      (fn [expr] val)]
 
