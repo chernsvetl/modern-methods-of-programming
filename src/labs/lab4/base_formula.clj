@@ -30,30 +30,28 @@
     [(fn [expr] (pier-arrow? expr))
      (fn [expr] (negation (disjunction (first (args expr)) (second (args expr)))))]
 
-
     [(fn [expr] (const-true? expr))
      (fn [expr] (const-true (base-operations-expr  (second expr))))]
 
+    [(fn [expr] (or (variable? expr) (const? expr)))
+     (fn [expr] expr)]
 
-              [(fn [expr] (or (variable? expr) (const? expr)))
-               (fn [expr] expr)]
+    [(fn [expr] (conjunction? expr))
+     (fn [expr] (apply conjunction (map #(base-operations-expr %) (args expr))))]
 
-              [(fn [expr] (conjunction? expr))
-               (fn [expr] (apply conjunction (map #(base-operations-expr %) (args expr))))]
+    [(fn [expr] (disjunction? expr))
+     (fn [expr] (apply disjunction (map #(base-operations-expr %) (args expr))))]
 
-              [(fn [expr] (disjunction? expr))
-               (fn [expr] (apply disjunction (map #(base-operations-expr %) (args expr))))]
+    [(fn [expr] (negation? expr))
+     (fn [expr] (apply negation (first (args expr))))]
 
-              [(fn [expr] (negation? expr))
-               (fn [expr] (apply negation (first (args expr))))]
+    [(fn [expr] (and (negation? expr) (const-false? (second expr))))
+     (fn [expr] (apply negation (first (args expr))))]
 
-              [(fn [expr] (and (negation? expr) (const-false? (second expr))))
-               (fn [expr] (apply negation (first (args expr))))]
+    [(fn [expr] (implication? expr))
+     (fn [expr] (base-operations-expr (disjunction (negation (first (args expr))) (base-operations-expr (second (args expr))))))]
 
-              [(fn [expr] (implication? expr))
-               (fn [expr] (base-operations-expr (disjunction (negation (first (args expr))) (base-operations-expr (second (args expr))))))]
-
-              )
+      )
     )
 
 (defn base-operations-expr [expr]

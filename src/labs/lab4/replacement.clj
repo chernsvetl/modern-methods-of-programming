@@ -27,7 +27,8 @@
     [(fn [expr] (disjunction? expr))
      (fn [expr] (apply disjunction (map #(define-expr var val %) (args expr))))]
 
-    ))
+    )
+  )
 
 (defn define-expr [var val expr]
   (diff expr (define-rules var val)))
