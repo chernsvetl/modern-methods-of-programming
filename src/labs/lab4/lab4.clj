@@ -23,7 +23,7 @@
     (println (escape-negations-expr (no const-true)))
     (println (base-operations-expr (&& (|| (variable :x) (variable :y)) (variable :z))))
     (println (base-operations-expr (xor (variable :x) (variable :y))))
-    (println (simplification (variable :x) const-true (↓↓ (variable :x) (variable :x))))
+    (println (simplification (variable :x) const-true (↓↓ (variable :x) const-false)))
     )
 
   (-main)
