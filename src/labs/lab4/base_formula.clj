@@ -7,6 +7,7 @@
 
 (def base-operations-rules
   "список правил вывода"
+
   (list
 
     [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))

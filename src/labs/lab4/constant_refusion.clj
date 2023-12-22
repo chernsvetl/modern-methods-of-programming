@@ -7,8 +7,10 @@
   )
 
 (declare constant-refuse-expr)
+
+"список правил вывода"
 (def constant-refuse-rules
-  "список правил вывода"
+  "избавляемся от случаев, когда имеем дизъюнкцию и true -> true"
   (list
 
     [(fn [expr] (and (disjunction? expr) (some const? (args expr))))
@@ -17,7 +19,7 @@
                     (apply disjunction
                            (map #(constant-refuse-expr %) (and (#(= const-false %)) (args expr))))
                               ))]
-
+    "избавляемся от случаев, когда имеем конъюнкцию и false -> false"
     [(fn [expr] (and (conjunction? expr) (some const? (args expr))))
      (fn [expr] (if (some const-false? (args expr))
                   const-false

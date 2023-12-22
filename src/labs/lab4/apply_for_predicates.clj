@@ -5,7 +5,6 @@
   (:require [labs.lab4.replacement :refer :all])
   )
 
-
 (declare apply-for-predicates-expr)
 
 (def apply-for-predicates-expr-rules
