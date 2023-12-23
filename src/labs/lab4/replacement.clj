@@ -2,7 +2,8 @@
   (:require [labs.lab4.api :refer :all])
   )
 
-(defn diff [expr rules]
+(defn select-rule [expr rules]
+  "функция для выбора первого подходящего правила, условие которого соответствует заданному выражению"
   ((some (fn [rule] (if ((first rule) expr) (second rule) false))
          rules)
    expr)
@@ -33,4 +34,4 @@
   )
 
 (defn define-expr [var val expr]
-  (diff expr (define-rules var val)))
+  (select-rule expr (define-rules var val)))

@@ -9,29 +9,28 @@
   "список правил вывода"
   (list
 
-    ;"правило замены отрицания true -> false"
+    ; "правило замены отрицания true -> false"
     [(fn [expr] (and (no? expr) (const-true? (first (args expr)))))
      (fn [expr] const-false)]
 
-    ;"правило замены отрицания false -> true"
+    ; "правило замены отрицания false -> true"
     [(fn [expr] (and (no? expr) (const-false? (first (args expr)))))
      (fn [expr] const-true)]
 
-    ;"двойное отрицание переменной"
+    ; "правило для двойного отрицания переменной"
     [(fn [expr] (and (no? expr) (no? (second expr))))
      (fn [expr] (escape-negations-expr (first (args (second expr)))))]
 
+    ; "правило для проверки является ли выражение отрицанием"
     [(fn [expr] (no? expr))
      (fn [expr] (no (escape-negations-expr  (second expr))))]
 
+    ; "правило для проверки являться переменной или константой"
     [(fn [expr] (or (variable? expr) (const? expr)))
      (fn [expr] expr)]
-
-    [(fn [expr] (and (no? expr) (no? (second expr))))
-     (fn [expr] (escape-negations-expr (first (args (second expr)))))]
 
     )
   )
 
 (defn escape-negations-expr [expr]
-  (diff expr escape-negations-rules))
+  (select-rule expr escape-negations-rules))
