@@ -11,21 +11,28 @@
 "список правил вывода"
 (def escape-constants-rules
   (list
+
     ; "правило для избавления от случаев, когда имеем дизъюнкцию и true -> true"
     [(fn [expr] (and (||? expr) (some const? (args expr))))
      (fn [expr]
        (if (some const-true? (args expr))
          const-true
-         (apply ||
-                (map #(escape-constants-expr %) (filter #(not= const-false %) (args expr))))))]
+         (let [filtered (filter #(not= const-false %) (args expr))]
+           (if (empty? filtered)
+             const-false
+             (apply ||
+               (map #(escape-constants-expr %) filtered))))))]
 
     ; "правило для избавления от случаев, когда имеем конъюнкцию и false -> false"
     [(fn [expr] (and (&&? expr) (some const? (args expr))))
      (fn [expr]
        (if (some const-false? (args expr))
          const-false
-         (apply &&
-                (map #(escape-constants-expr %) (filter #(not= const-true %) (args expr))))))]
+         (let [filtered (filter #(not= const-true %) (args expr))]
+           (if (empty? filtered)
+             const-true
+             (apply &&
+                    (map #(escape-constants-expr %) filtered))))))]
 
     ; "правило для проверки является ли выражение отрицанием"
     [(fn [expr] (no? expr))
