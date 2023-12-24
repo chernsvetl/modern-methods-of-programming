@@ -7,9 +7,8 @@
 
 (def base-operations-rules
   "список правил вывода"
-
   (list
-    ; (x || y) && z=(x && z) || (y && z)
+
     ; "правило для конъюнкции дизъюнкции"
     [(fn [expr] (and (&&? expr) (||? (second expr))))
      (fn [expr] (base-operations-expr
@@ -18,7 +17,6 @@
                     (&& (second (args (first (args expr)))) (second (args expr)))
                     )))]
 
-    ; !x && y  ||  x && !y
     ; "правило для операции исключающее или"
     [(fn [expr] (xor? expr))
      (fn [expr] (base-operations-expr
@@ -26,7 +24,6 @@
                     (&& (first (args expr)) (no (second (args expr))))
                     (&& (no(first (args expr))) (second (args expr))))))]
 
-    ; x && !y  !x && y
     ; "правило для стрелки Пирса"
     [(fn [expr] (↓↓? expr))
      (fn [expr] (no (|| (first (args expr)) (second (args expr)))))]

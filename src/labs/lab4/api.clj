@@ -34,10 +34,8 @@
   ;"получение значения для переменной"
   (second v))
 
-(defn same-variables?
+(defn same-variables? [v1 v2]
   ;"сравнение переменных"
-  [v1 v2]
-
   (and
     (variable? v1)
     (variable? v2)

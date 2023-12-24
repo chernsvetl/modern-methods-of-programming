@@ -10,12 +10,11 @@
 (def apply-for-predicates-expr-rules
   "список правил вывода"
   (list
-    ; !(A && B)=!A || !B
+
     ; "правило для отрицания конъюнкции"
     [(fn [expr] (and (no? expr) (&&? (second expr))))
      (fn [expr] (apply-for-predicates-expr (apply || (map #(no %) (args (second expr))))))]
 
-    ; !(A || B)=!A && !B
     ; "правило для отрицания дизъюнкции"
     [(fn [expr] (and (no? expr) (||? (second expr))))
      (fn [expr] (apply-for-predicates-expr (apply && (map #(no %) (args (second expr))))))]
